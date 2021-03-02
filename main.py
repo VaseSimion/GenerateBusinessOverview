@@ -1,18 +1,9 @@
-from urllib.request import urlopen
-import json
+import ExtractData as Ed
 
-key = "to be imported"
 stock = "CVS"
-what_to_extract = "balance-sheet"
-what_to_extract = "cash-flow"
-#what_to_extract = "income"
+balance = Ed.return_balance_sheet(stock)
+income = Ed.return_income(stock)
+cash = Ed.return_cash_flow(stock)
 
-url = "https://financialmodelingprep.com/api/v3/" + what_to_extract + "-statement/" + stock + \
-      "?limit=800&apikey=" + key
-
-response = urlopen(url)
-results = json.loads(response.read().decode("utf-8"))
-print(results)
-
-for line in results:
+for line in cash:
     print(line)
