@@ -35,13 +35,19 @@ def return_cash_flow(stock):
     return cash
 
 
-def return_stock_info(stock):
+def return_stock_quote(stock):
     url = "https://financialmodelingprep.com/api/v3/" + "quote/" + stock + "?apikey=" + key
     response = urlopen(url)
     return json.loads(response.read().decode("utf-8"))[0]
 
 
-def return_processed_data(income, balance, cash, info):
+def return_stock_profile(stock):
+    url = "https://financialmodelingprep.com/api/v3/" + "profile/" + stock + "?apikey=" + key
+    response = urlopen(url)
+    return json.loads(response.read().decode("utf-8"))[0]
+
+
+def return_processed_data(income, balance, cash, profile):
     # data for output
     dates = []
     free_cash_flow = []
@@ -58,7 +64,7 @@ def return_processed_data(income, balance, cash, info):
         print(year)
         dates.append(datetime.strptime(year['date'], "%Y-%m-%d"))
         free_cash_flow.append(year['freeCashFlow'] / 1e6)
-        dividends_paid.append(year["dividendsPaid"] / 1e6)
+        dividends_paid.append(-year["dividendsPaid"] / 1e6)
 
     print("income")
     for year in income:
@@ -76,10 +82,16 @@ def return_processed_data(income, balance, cash, info):
 
     # calculating derived ones
     return_on_equity = [a / b for (a, b) in zip(net_income, stockholder_equity)]
-    profit_margin = [a / b for (a, b) in zip(net_income, revenue)]
-    dividends_per_share = [-x * 1e6 / info["sharesOutstanding"] for x in dividends_paid]
+    profit_margin = [100 * a / b for (a, b) in zip(net_income, revenue)]
+    shares_outstanding = int(profile["mktCap"] / profile["price"])
+    dividends_per_share = [x * 1e6 / shares_outstanding for x in dividends_paid]
 
-    output_dictionary = {"Dates": dates,
+    output_dictionary = {"Name": profile["companyName"],
+                         "Price": profile["price"],
+                         "Symbol": profile["symbol"],
+                         "Industry": profile["industry"],
+                         "Sector": profile["sector"],
+                         "Dates": dates,
                          "FreeCashFlow": free_cash_flow,
                          "NetIncome": net_income,
                          "Revenue": revenue,
