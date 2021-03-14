@@ -80,17 +80,28 @@ def return_processed_data(income, balance, cash, profile):
         stockholder_equity.append(year["totalStockholdersEquity"] / 1e6)
         total_debt.append(year["totalDebt"] / 1e6)
 
+    print("profile")
+    print(profile)
     # calculating derived ones
-    return_on_equity = [a / b for (a, b) in zip(net_income, stockholder_equity)]
-    profit_margin = [100 * a / b for (a, b) in zip(net_income, revenue)]
+    return_on_equity = [a / b if b != 0 else 0 for (a, b) in zip(net_income, stockholder_equity)]
+    profit_margin = [100 * a / b if b != 0 else 0 for (a, b) in zip(net_income, revenue)]
     shares_outstanding = int(profile["mktCap"] / profile["price"])
     dividends_per_share = [x * 1e6 / shares_outstanding for x in dividends_paid]
 
-    output_dictionary = {"Name": profile["companyName"],
-                         "Price": profile["price"],
-                         "Symbol": profile["symbol"],
-                         "Industry": profile["industry"],
-                         "Sector": profile["sector"],
+    dates = dates[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+    free_cash_flow = free_cash_flow[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+    net_income = net_income[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+    revenue = revenue[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+    current_equity = current_equity[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+    stockholder_equity = stockholder_equity[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+    total_debt = total_debt[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+    earnings_per_share = earnings_per_share[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+    dividends_paid = dividends_paid[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+    return_on_equity = return_on_equity[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+    profit_margin = profit_margin[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+    dividends_per_share = dividends_per_share[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
+
+    output_dictionary = {"Symbol": profile["symbol"],
                          "Dates": dates,
                          "FreeCashFlow": free_cash_flow,
                          "NetIncome": net_income,

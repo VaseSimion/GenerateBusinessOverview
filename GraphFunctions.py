@@ -102,3 +102,5 @@ def save_all_support_file(processed_data):
                                  processed_data["Symbol"], "Current Equity", "Shareholder Equity", "[mil $]")
     save_two_generic_millions(processed_data["Dates"], processed_data["Debt"], processed_data["ShareholderEquity"],
                                  processed_data["Symbol"], "Debt", "Shareholder Equity", "[mil $]")
+
+    #TODO: Add free cash flow and net income in the same graph: https://www.investopedia.com/terms/f/freecashflow.asp

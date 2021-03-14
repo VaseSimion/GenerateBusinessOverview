@@ -7,7 +7,7 @@ import os
 from datetime import date
 import pandas as pd
 import numpy as np
-
+import NumbersToText as Nt
 
 def write_start(file):
     file.write("""<!DOCTYPE html>
@@ -24,16 +24,23 @@ def write_start(file):
         """)
 
 
-def write_data(file, data):
+def write_data(file, data, profile):
 
 
     file.write("""<h1>{}</h1>
 
     <p>Price is {}$ per share</p>
-
-    
     <br>
-    <p> It operates in the {} sector, part of the {} industry</p>
+    <p>The P/E ratio according to last yearly earnings is {}</p>
+    <p> It operates in the {} sector, part of the {} industry.</p
+    """.format(profile["companyName"], profile["price"], round(profile["price"]/data["EPS"][-1], 1), profile["sector"], profile["industry"]) +
+               "<p>" + Nt.free_cash_flow_analysis(data)[0]+"</p>" +
+               "<p>" + Nt.revenue_analysis(data)[0] + "</p>" +
+               "<p>" + Nt.net_income_analysis(data)[0] + "</p>" +
+               "<p>" + Nt.roe_analysis(data)[0] + "</p>" +
+               "<p>" + Nt.profit_margin_analysis(data)[0] + "</p>" +
+               "<p>" + Nt.dividends_analysis(data)[0] + "</p>" +
+               """
     <p> You can find more information on stock at <a href=https://finance.yahoo.com/quote/{}>{}</a> </p>
     <p><img src="C:/Users/sular/PycharmProjects/Generate Business Overview/Support Files/{}-price.png" width="800" height="426"></p>
     <p><img src="C:/Users/sular/PycharmProjects/Generate Business Overview/Support Files/{}Revenue.png" width="800" height="214"></p>
@@ -59,7 +66,7 @@ def write_data(file, data):
     <br>
     <br>
     <br>
-    <br>""".format(data["Name"], data["Price"], data["Sector"], data["Industry"], data["Symbol"], data["Symbol"],
+    <br>""".format(data["Symbol"], data["Symbol"],
                    data["Symbol"], data["Symbol"], data["Symbol"], data["Symbol"], data["Symbol"], data["Symbol"],
                    data["Symbol"], data["Symbol"], data["Symbol"], data["Symbol"], data["Symbol"]))
 
@@ -90,11 +97,11 @@ def write_end(file):
     </html>""")
 
 
-def write_the_report(data):
+def write_the_report(data, profile):
     report_name = "Support Files/Temporary.html"
     template_file = open(report_name, "w+")
     write_start(template_file)
-    write_data(template_file, data)
+    write_data(template_file, data, profile)
     write_end(template_file)
     template_file.close()
 
