@@ -51,10 +51,13 @@ def save_macd_buy(stock_name):
 
 
 def save_generic_millions(dates, data_to_plot, stock_name, data_name, units):
-    plt.figure(figsize=(15, 4))
+    fig = plt.figure(figsize=(15, 4))
+    ax = fig.add_subplot(111)
     plt.plot(dates, data_to_plot)
+    for i, j in zip(dates, data_to_plot):
+        ax.annotate(str(j), xy=(i, round(j, 2)))
     increase = [0]
-    for index,value in enumerate(data_to_plot):
+    for index, value in enumerate(data_to_plot):
         if index > 0:
             increase.append(value-data_to_plot[index-1])
     plt.bar(dates[1:], increase[1:], width=100)
@@ -91,7 +94,7 @@ def save_all_support_file(processed_data):
     save_generic_millions(processed_data["Dates"], processed_data["Dividends"], processed_data["Symbol"],
                              "Dividends paid", "[mil $]")
     save_generic_millions(processed_data["Dates"], processed_data["ROE"], processed_data["Symbol"],
-                             "Return on equity", "[mil $]")
+                             "Return on equity", "[%]")
     save_generic_millions(processed_data["Dates"], processed_data["ProfitMargin"], processed_data["Symbol"],
                              "Profit margin", "[%]")
     save_two_generic_millions(processed_data["Dates"], processed_data["CurrentEquity"],

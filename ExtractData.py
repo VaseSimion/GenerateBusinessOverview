@@ -83,7 +83,7 @@ def return_processed_data(income, balance, cash, profile):
     print("profile")
     print(profile)
     # calculating derived ones
-    return_on_equity = [a / b if b != 0 else 0 for (a, b) in zip(net_income, stockholder_equity)]
+    return_on_equity = [100 * a / b if b != 0 else 0 for (a, b) in zip(net_income, stockholder_equity)]
     profit_margin = [100 * a / b if b != 0 else 0 for (a, b) in zip(net_income, revenue)]
     shares_outstanding = int(profile["mktCap"] / profile["price"])
     dividends_per_share = [x * 1e6 / shares_outstanding for x in dividends_paid]
