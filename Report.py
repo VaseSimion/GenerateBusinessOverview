@@ -32,14 +32,18 @@ def write_data(file, data, profile):
     <p>Price is {}$ per share</p>
     <br>
     <p>The P/E ratio according to last yearly earnings is {}</p>
+    <p>The company has a market cap of {} billion</p>
     <p> It operates in the {} sector, part of the {} industry.</p
-    """.format(profile["companyName"], profile["price"], round(profile["price"]/data["EPS"][-1], 1), profile["sector"], profile["industry"]) +
+    """.format(profile["companyName"], profile["price"], round(profile["price"]/data["EPS"][-1], 1),
+               round(profile['mktCap'] * 1e-9, 2), profile["sector"], profile["industry"]) +
                "<p>" + Nt.free_cash_flow_analysis(data)[0]+"</p>" +
                "<p>" + Nt.revenue_analysis(data)[0] + "</p>" +
                "<p>" + Nt.net_income_analysis(data)[0] + "</p>" +
                "<p>" + Nt.roe_analysis(data)[0] + "</p>" +
                "<p>" + Nt.profit_margin_analysis(data)[0] + "</p>" +
                "<p>" + Nt.dividends_analysis(data)[0] + "</p>" +
+               "<p>" + Nt.simple_free_cash_flow_prediction(data) + "</p>" +
+               "<p>" + Nt.extrapolated_free_cash_flow_prediction(data) + "</p>" +
                """
     <p> You can find more information on stock at <a href=https://finance.yahoo.com/quote/{}>{}</a> </p>
     <p><img src="C:/Users/sular/PycharmProjects/Generate Business Overview/Support Files/{}-price.png" width="800" height="426"></p>

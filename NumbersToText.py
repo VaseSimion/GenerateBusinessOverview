@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def free_cash_flow_analysis(data):
     list_to_interpret = data["FreeCashFlow"]
     if len(list_to_interpret) < 2:
@@ -112,3 +115,41 @@ def roe_analysis(data):
             return ["The return on equity has been increasing in the last year.", 1]
     else:
         return ["The return on equity decreased in the last year.", 0]
+
+
+def simple_free_cash_flow_prediction(data):
+    fcf = data["FreeCashFlow"][-1] * 1e-3
+    summed = 0
+    for i in range(10):
+        #print(i, fcf)
+        summed += fcf
+        if i == 9:
+            #print(i, 10 * fcf)
+            summed += 10 * fcf
+        fcf = fcf * 0.9
+    summed = round(summed, 2)
+    return "According to a simple fcf analysis the intrinsec value discounted with 10% per year is {} billions".\
+        format(summed)
+
+
+def extrapolated_free_cash_flow_prediction(data):
+    y = [fcf * 1e-3 for fcf in data["FreeCashFlow"]]
+    x = [1, 2, 3, 4, 5]
+    x = x[:len(y)]
+    predictions = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    #print(x, y)
+    print(np.polyfit(x, y, 1))
+    f = np.poly1d(np.polyfit(x, y, 1))
+
+    future_fcf = f(predictions)
+    #print(future_fcf)
+    summed = 0
+    for index, value in enumerate(future_fcf):
+        summed += value * 0.9 ** (index+1)
+        #print(value, value * 0.9 ** (index+1))
+        if index == 9:
+            summed += 10 * value * 0.9 ** (index+1)
+
+    summed = round(summed, 2)
+    return "According to a extrapolated fcf analysis the intrinsec value discounted with 10% per year is {} billions".\
+        format(summed)
