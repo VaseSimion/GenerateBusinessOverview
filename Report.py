@@ -41,7 +41,6 @@ def write_data(file, data, profile):
                "<p>" + Nt.net_income_analysis(data)[0] + "</p>" +
                "<p>" + Nt.roe_analysis(data)[0] + "</p>" +
                "<p>" + Nt.profit_margin_analysis(data)[0] + "</p>" +
-               "<p>" + Nt.dividends_analysis(data)[0] + "</p>" +
                "<p>" + Nt.simple_free_cash_flow_prediction(data) + "</p>" +
                "<p>" + Nt.extrapolated_free_cash_flow_prediction(data) + "</p>" +
                """
@@ -51,7 +50,6 @@ def write_data(file, data, profile):
     <p><img src="C:/Users/sular/PycharmProjects/Generate Business Overview/Support Files/{}Free cash flow.png" width="800" height="214"></p>
     <p><img src="C:/Users/sular/PycharmProjects/Generate Business Overview/Support Files/{}Current EquityShareholder Equity.png" width="800" height="214"></p>
     <p><img src="C:/Users/sular/PycharmProjects/Generate Business Overview/Support Files/{}DebtShareholder Equity.png" width="800" height="214"></p>
-    <p><img src="C:/Users/sular/PycharmProjects/Generate Business Overview/Support Files/{}Dividends paid.png" width="800" height="214"></p>
     <p><img src="C:/Users/sular/PycharmProjects/Generate Business Overview/Support Files/{}Dividends per share.png" width="800" height="214"></p>
     <p><img src="C:/Users/sular/PycharmProjects/Generate Business Overview/Support Files/{}Earnings per share.png" width="800" height="214"></p>
     <p><img src="C:/Users/sular/PycharmProjects/Generate Business Overview/Support Files/{}Net income.png" width="800" height="214"></p>
@@ -72,7 +70,7 @@ def write_data(file, data, profile):
     <br>
     <br>""".format(data["Symbol"], data["Symbol"],
                    data["Symbol"], data["Symbol"], data["Symbol"], data["Symbol"], data["Symbol"], data["Symbol"],
-                   data["Symbol"], data["Symbol"], data["Symbol"], data["Symbol"], data["Symbol"]))
+                   data["Symbol"], data["Symbol"], data["Symbol"], data["Symbol"]))
 
 
 def write_end(file):
@@ -87,16 +85,7 @@ def write_end(file):
     <br>
     <br>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <p>Disclaimer: This is just a financial experiment, I am in no position to give financial advice. I have no education in finance and you should do your investing and trading based on your own due dilligence and research.</p>
+    <p>Disclaimer:The information on this page, and its related publications, is not intended to be, nor does it constitute, investment advice or recommendations. In no event shall the author be liable to any member, guest, or third party for any damages of any kind arising out of the use of any content or other material published or available on this page, or relating to the use of, or inability to use, this page or any content. The information on this page is not guaranteed for completeness, accuracy, or in any other way.</p>
     </body>
     </html>""")
 

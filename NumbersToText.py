@@ -58,27 +58,6 @@ def net_income_analysis(data):
         return ["The net income decreased in the last year.", 0]
 
 
-def dividends_analysis(data):
-    list_to_interpret = data["Dividends"]
-    if len(list_to_interpret) < 2:
-        return ["Not enough financial data to conclude anything", 0]
-    if list_to_interpret[-1] == 0:
-        return ["This stock does not pay dividends", 0]
-    if list_to_interpret[-1] > list_to_interpret[-2]:
-        if len(list_to_interpret) > 2 and list_to_interpret[-2] > list_to_interpret[-3]:
-            if len(list_to_interpret) > 3 and list_to_interpret[-3] > list_to_interpret[-4]:
-                if len(list_to_interpret) > 4 and list_to_interpret[-4] > list_to_interpret[-5]:
-                    return ["The dividends has been increasing every year in the last 4 years.", 4]
-                else:
-                    return ["The dividends has been increasing every year in the last 3 years.", 3]
-            else:
-                return ["The dividends has been increasing every year in the last 2 years.", 2]
-        else:
-            return ["The dividends has been increasing in the last year.", 1]
-    else:
-        return ["The dividends decreased in the last year.", 0]
-
-
 def profit_margin_analysis(data):
     list_to_interpret = data["ProfitMargin"]
     if len(list_to_interpret) < 2:
@@ -133,10 +112,10 @@ def simple_free_cash_flow_prediction(data):
 
 
 def extrapolated_free_cash_flow_prediction(data):
-    y = [fcf * 1e-3 for fcf in data["FreeCashFlow"]]
+    y = [fcf * 1e-3 for fcf in data["FreeCashFlow"][-5:]]
     x = [1, 2, 3, 4, 5]
     x = x[:len(y)]
-    predictions = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    predictions = [max(x) + y for y in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]
     #print(x, y)
     print(np.polyfit(x, y, 1))
     f = np.poly1d(np.polyfit(x, y, 1))

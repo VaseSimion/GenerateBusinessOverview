@@ -55,12 +55,13 @@ def save_generic_millions(dates, data_to_plot, stock_name, data_name, units):
     ax = fig.add_subplot(111)
     plt.plot(dates, data_to_plot)
     for i, j in zip(dates, data_to_plot):
-        ax.annotate(str(j), xy=(i, round(j, 2)))
+        ax.annotate(str(j), xy=(i, round(j, 2)), rotation=45)
     increase = [0]
     for index, value in enumerate(data_to_plot):
         if index > 0:
             increase.append(value-data_to_plot[index-1])
-    plt.bar(dates[1:], increase[1:], width=100)
+    plt.bar(dates[1:], increase[1:], width=1)
+    plt.xticks(dates[:-3:3]+dates[-1:], dates[:-3:3]+dates[-1:])
     plt.legend([data_name, "Increase in " + data_name.lower()])
     plt.xlabel("Time")
     plt.ylabel(data_name + " " + units)
@@ -75,6 +76,7 @@ def save_two_generic_millions(dates, data_to_plot, data_to_plot_2, stock_name, d
     plt.legend([data_name, data_name_2])
     plt.xlabel("Time")
     plt.ylabel(data_name + " and " + data_name_2 + " "+ units)
+    plt.xticks(dates[:-3:3]+dates[-1:], dates[:-3:3]+dates[-1:])
     plt.savefig("Support Files/" + stock_name + data_name + data_name_2 + ".png")
     plt.close()
 
@@ -91,8 +93,6 @@ def save_all_support_file(processed_data):
                              "Earnings per share", "[$]")
     save_generic_millions(processed_data["Dates"], processed_data["DividendsPerShare"], processed_data["Symbol"],
                              "Dividends per share", "[$]*")
-    save_generic_millions(processed_data["Dates"], processed_data["Dividends"], processed_data["Symbol"],
-                             "Dividends paid", "[mil $]")
     save_generic_millions(processed_data["Dates"], processed_data["ROE"], processed_data["Symbol"],
                              "Return on equity", "[%]")
     save_generic_millions(processed_data["Dates"], processed_data["ProfitMargin"], processed_data["Symbol"],

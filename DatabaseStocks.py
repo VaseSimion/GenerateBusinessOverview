@@ -673,4 +673,15 @@ def get_investing_lists():
     print(len(investment_list))
     return investment_list
 
+
+def get_random_stock():
+    investment_list = investing_list_of_industrials + investing_list_of_technology + \
+                      investing_list_of_communication_services + investing_list_of_energy + \
+                      investing_list_of_utilities_and_real_estate + investing_list_of_materials + \
+                      investing_list_of_consumer_discretionary + investing_list_of_consumer_staples + \
+                      investing_list_of_financials + investing_list_of_oct_nov
+    # removed heathcare here becasue it doesn't follow financial rules
+    random.shuffle(investment_list)
+    return random.choice(investment_list)
+
 # print(get_investing_lists())

@@ -6,7 +6,7 @@ from datetime import datetime
 config = configparser.ConfigParser()
 config.read('Settings.ini')
 key = config["SETTINGS"]["key"]
-
+quickfs_key = config["QUICKFS"]["key"]
 
 def return_income(stock):
     url = "https://financialmodelingprep.com/api/v3/" + "income" + "-statement/" + stock + \
@@ -111,6 +111,43 @@ def return_processed_data(income, balance, cash, profile):
                          "Debt": total_debt,
                          "EPS": earnings_per_share,
                          "Dividends": dividends_paid,
+                         "ROE": return_on_equity,
+                         "ProfitMargin": profit_margin,
+                         "DividendsPerShare": dividends_per_share}
+    return output_dictionary
+
+
+def return_processed_data_quickfs(stock):
+    url = "https://public-api.quickfs.net/v1/data/all-data/"+stock+":US?api_key=" + quickfs_key
+    response = urlopen(url)
+    received_data = json.loads(response.read().decode("utf-8"))
+
+    annual_data = received_data["data"]["financials"]["annual"]
+    metadata = received_data["data"]["metadata"]
+
+    dates = annual_data["period_end_date"]
+    revenue = [x*1e-6 for x in annual_data["revenue"]]
+    net_income = [x*1e-6 for x in annual_data["net_income"]]
+    dividends_per_share = annual_data["dividends"]
+    stockholder_equity = [x*1e-6 for x in annual_data["total_equity"]]
+    free_cash_flow = [x*1e-6 for x in annual_data["fcf"]]
+    total_debt = [x*1e-6 for x in annual_data["net_debt"]]
+    current_equity = [(a-b)*1e-6 for (a, b) in zip(annual_data["total_current_assets"],
+                                                   annual_data["total_current_liabilities"])]
+    earnings_per_share = annual_data["eps_basic"]
+    return_on_equity = [x*100 for x in annual_data["roe"]]
+    # roic = [x*100 for x in annual_data["roic"]]
+    profit_margin = [x*100 for x in annual_data["net_income_margin"]]
+
+    output_dictionary = {"Symbol": metadata["symbol"],
+                         "Dates": dates,
+                         "FreeCashFlow": free_cash_flow,
+                         "NetIncome": net_income,
+                         "Revenue": revenue,
+                         "CurrentEquity": current_equity,
+                         "ShareholderEquity": stockholder_equity,
+                         "Debt": total_debt,
+                         "EPS": earnings_per_share,
                          "ROE": return_on_equity,
                          "ProfitMargin": profit_margin,
                          "DividendsPerShare": dividends_per_share}
