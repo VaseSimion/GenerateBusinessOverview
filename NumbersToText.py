@@ -132,3 +132,18 @@ def extrapolated_free_cash_flow_prediction(data):
     summed = round(summed, 2)
     return "According to a extrapolated fcf analysis the intrinsec value discounted with 10% per year is {} billions".\
         format(summed)
+
+
+def calculated_sticker_price_according_to_rule_1_book(data):
+    if data["10yAverage"][1] == "NA" or data["5yAverage"][1] == "NA":
+        return "According to rule 1 investing book, the fundamentals are not good enough to invest in this"
+    earnings_rate = max(data["10yAverage"][1], data["5yAverage"][1])  # in the book the equity grwth is used as future EPS growth
+    if earnings_rate < 7 or data["10yAverage"][0] < 7:
+        return "According to rule 1 investing book, the fundamentals are not good enough to invest in this"
+
+    eps = data["EPS"][-1]
+    future_eps = eps * ((1 + earnings_rate/100)**10)
+    future_price = min(2*earnings_rate, data["MedianPE"]) * future_eps
+    reduced_price_to_now = round((future_price / 4.04), 2)
+    return "According to rule 1 investing book, the price now to cover 15% increase without margin of safety is " + \
+           str(reduced_price_to_now)

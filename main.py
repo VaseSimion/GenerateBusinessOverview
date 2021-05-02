@@ -3,17 +3,18 @@ import GraphFunctions as Gf
 import Report as Rp
 import DatabaseStocks as Ds
 
-using_financial_prep = False
-#stock = Ds.get_random_stock()
-stock = "TDY"
+using_financial_prep = True
+stock = Ds.get_random_stock()
 
 if using_financial_prep:
+    stock = "MSFT"
     balance = Ed.return_balance_sheet(stock)
     income = Ed.return_income(stock)
     cash = Ed.return_cash_flow(stock)
     profile = Ed.return_stock_profile(stock)
     processed_data = Ed.return_processed_data(income, balance, cash, profile)
 else:
+    stock = "AAWW"
     profile = Ed.return_stock_profile(stock)
     processed_data = Ed.return_processed_data_quickfs(stock)
 

@@ -2,11 +2,13 @@ from urllib.request import urlopen
 import json
 import configparser
 from datetime import datetime
+from numpy import median
 
 config = configparser.ConfigParser()
 config.read('Settings.ini')
 key = config["SETTINGS"]["key"]
 quickfs_key = config["QUICKFS"]["key"]
+
 
 def return_income(stock):
     url = "https://financialmodelingprep.com/api/v3/" + "income" + "-statement/" + stock + \
@@ -102,6 +104,7 @@ def return_processed_data(income, balance, cash, profile):
     dividends_per_share = dividends_per_share[-min(len(free_cash_flow), len(revenue), len(total_debt)):]
 
     output_dictionary = {"Symbol": profile["symbol"],
+                         "Source": "FinancialModelingPrep",
                          "Dates": dates,
                          "FreeCashFlow": free_cash_flow,
                          "NetIncome": net_income,
@@ -136,10 +139,39 @@ def return_processed_data_quickfs(stock):
                                                    annual_data["total_current_liabilities"])]
     earnings_per_share = annual_data["eps_basic"]
     return_on_equity = [x*100 for x in annual_data["roe"]]
-    # roic = [x*100 for x in annual_data["roic"]]
+    roic = [x*100 for x in annual_data["roic"]]
+    pe_ratio = annual_data["price_to_earnings"]
     profit_margin = [x*100 for x in annual_data["net_income_margin"]]
 
+    # calculate 10 years numbers
+    try:
+        avg10y_roic = round(median(roic[-10:]), 2)
+        avg10y_equity = round((((stockholder_equity[-1]/stockholder_equity[-10])**0.1) - 1) * 100, 2)
+        avg10y_eps = round((((earnings_per_share[-1]/earnings_per_share[-10])**0.1) - 1) * 100, 2)
+        avg10y_fcf = round((((free_cash_flow[-1]/free_cash_flow[-10])**0.1) - 1) * 100, 2)
+    except:
+        avg10y_roic = "NA"
+        avg10y_equity = "NA"
+        avg10y_eps = "NA"
+        avg10y_fcf = "NA"
+
+    try:
+        avg5y_roic = round(median(roic[-5:]), 2)
+        avg5y_equity = round((((stockholder_equity[-1]/stockholder_equity[-5])**0.2) - 1) * 100, 2)
+        avg5y_eps = round((((earnings_per_share[-1]/earnings_per_share[-5])**0.2) - 1) * 100, 2)
+        avg5y_fcf = round((((free_cash_flow[-1]/free_cash_flow[-5])**0.2) - 1) * 100, 2)
+    except:
+        avg5y_roic = "NA"
+        avg5y_equity = "NA"
+        avg5y_eps = "NA"
+        avg5y_fcf = "NA"
+
+    last_year_roic = round(roic[-1], 2)
+    last_year_equity = round((stockholder_equity[-1]/stockholder_equity[-2] - 1) * 100, 2)
+    last_year_eps = round((earnings_per_share[-1]/earnings_per_share[-2] - 1) * 100, 2)
+    last_year_fcf = round((free_cash_flow[-1]/free_cash_flow[-2] - 1) * 100, 2)
     output_dictionary = {"Symbol": metadata["symbol"],
+                         "Source": "QuickFS",
                          "Dates": dates,
                          "FreeCashFlow": free_cash_flow,
                          "NetIncome": net_income,
@@ -149,6 +181,11 @@ def return_processed_data_quickfs(stock):
                          "Debt": total_debt,
                          "EPS": earnings_per_share,
                          "ROE": return_on_equity,
+                         "ROIC": roic,
                          "ProfitMargin": profit_margin,
-                         "DividendsPerShare": dividends_per_share}
+                         "DividendsPerShare": dividends_per_share,
+                         "MedianPE": median(pe_ratio[-min(-10, -len(pe_ratio)):]),
+                         "10yAverage": [avg10y_roic, avg10y_equity, avg10y_eps, avg10y_fcf],
+                         "5yAverage": [avg5y_roic, avg5y_equity, avg5y_eps, avg5y_fcf],
+                         "lastYearAverage": [last_year_roic, last_year_equity, last_year_eps, last_year_fcf]}
     return output_dictionary
