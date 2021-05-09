@@ -172,8 +172,12 @@ def write_the_report(data, profile):
     path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
     options = {'enable-local-file-access': None}
-    pdfkit.from_file('Support Files\\Temporary.html', 'Reports/Report ' + str(data["Symbol"]) + '.pdf',
-                     configuration=config, options=options)
+    if data["Source"] == "FinancialModelingPrep":
+        pdfkit.from_file('Support Files\\Temporary.html', 'Reports/Report ' + str(data["Symbol"]) + '.pdf',
+                         configuration=config, options=options)
+    elif data["Source"] == "QuickFS":
+        pdfkit.from_file('Support Files\\Temporary.html', 'Detailed reports/Report ' + str(data["Symbol"]) + '.pdf',
+                         configuration=config, options=options)
 
     supportdir = "Support Files"
 

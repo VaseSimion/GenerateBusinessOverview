@@ -141,6 +141,7 @@ def return_processed_data_quickfs(stock):
     return_on_equity = [x*100 for x in annual_data["roe"]]
     roic = [x*100 for x in annual_data["roic"]]
     pe_ratio = annual_data["price_to_earnings"]
+    print("PE ratio is ",pe_ratio)
     profit_margin = [x*100 for x in annual_data["net_income_margin"]]
 
     # calculate 10 years numbers
@@ -184,7 +185,7 @@ def return_processed_data_quickfs(stock):
                          "ROIC": roic,
                          "ProfitMargin": profit_margin,
                          "DividendsPerShare": dividends_per_share,
-                         "MedianPE": median(pe_ratio[-min(-10, -len(pe_ratio)):]),
+                         "MedianPE": median(pe_ratio[max(-10, (-1 * len(pe_ratio))):]),
                          "10yAverage": [avg10y_roic, avg10y_equity, avg10y_eps, avg10y_fcf],
                          "5yAverage": [avg5y_roic, avg5y_equity, avg5y_eps, avg5y_fcf],
                          "lastYearAverage": [last_year_roic, last_year_equity, last_year_eps, last_year_fcf]}

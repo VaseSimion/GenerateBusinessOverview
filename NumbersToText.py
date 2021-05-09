@@ -135,15 +135,20 @@ def extrapolated_free_cash_flow_prediction(data):
 
 
 def calculated_sticker_price_according_to_rule_1_book(data):
-    if data["10yAverage"][1] == "NA" or data["5yAverage"][1] == "NA":
+    if data["10yAverage"][1] == "NA" or data["5yAverage"][1] == "NA":  # [avg10y_roic, avg10y_equity, avg10y_eps, avg10y_fcf]
         return "According to rule 1 investing book, the fundamentals are not good enough to invest in this"
     earnings_rate = max(data["10yAverage"][1], data["5yAverage"][1])  # in the book the equity grwth is used as future EPS growth
+    print("earnings growth rate is ", earnings_rate)
     if earnings_rate < 7 or data["10yAverage"][0] < 7:
         return "According to rule 1 investing book, the fundamentals are not good enough to invest in this"
 
     eps = data["EPS"][-1]
+    print("EPS is ", eps)
     future_eps = eps * ((1 + earnings_rate/100)**10)
+    print("future EPS is ",future_eps)
     future_price = min(2*earnings_rate, data["MedianPE"]) * future_eps
+    print("MEdian pe is",  data["MedianPE"])
+    print("future price is ", future_price)
     reduced_price_to_now = round((future_price / 4.04), 2)
     return "According to rule 1 investing book, the price now to cover 15% increase without margin of safety is " + \
            str(reduced_price_to_now)
