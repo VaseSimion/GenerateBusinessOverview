@@ -159,6 +159,7 @@ def write_end(file):
 
 
 def write_the_report(data, profile):
+    clean_support = True
     report_name = "Support Files/Temporary.html"
     template_file = open(report_name, "w+")
     write_start(template_file)
@@ -180,8 +181,10 @@ def write_the_report(data, profile):
                          configuration=config, options=options)
 
     supportdir = "Support Files"
-
-    for subdir, dirs, files in os.walk(supportdir):
-        for file in files:
-            print(os.path.join(subdir, file))
-            os.remove(os.path.join(subdir, file))
+    if clean_support:
+        for subdir, dirs, files in os.walk(supportdir):
+            for file in files:
+                print(os.path.join(subdir, file))
+                os.remove(os.path.join(subdir, file))
+    else:
+        pass

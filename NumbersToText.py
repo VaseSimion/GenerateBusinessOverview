@@ -135,11 +135,14 @@ def extrapolated_free_cash_flow_prediction(data):
 
 
 def calculated_sticker_price_according_to_rule_1_book(data):
-    if data["10yAverage"][1] == "NA" or data["5yAverage"][1] == "NA":  # [avg10y_roic, avg10y_equity, avg10y_eps, avg10y_fcf]
+    if data["5yAverage"][1] == "NA":  # [avg10y_roic, avg10y_equity, avg10y_eps, avg10y_fcf]
         return "According to rule 1 investing book, the fundamentals are not good enough to invest in this"
-    earnings_rate = max(data["10yAverage"][1], data["5yAverage"][1])  # in the book the equity grwth is used as future EPS growth
+    if data["10yAverage"][1] != "NA":
+        earnings_rate = max(data["10yAverage"][1], data["5yAverage"][1])  # in the book the equity grwth is used as future EPS growth
+    else:
+        earnings_rate = data["5yAverage"][1]  # in the book the equity grwth is used as future EPS growth
     print("earnings growth rate is ", earnings_rate)
-    if earnings_rate < 7 or data["10yAverage"][0] < 7:
+    if earnings_rate < 7 or data["5yAverage"][0] < 7:
         return "According to rule 1 investing book, the fundamentals are not good enough to invest in this"
 
     eps = data["EPS"][-1]
